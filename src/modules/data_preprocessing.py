@@ -1,6 +1,11 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
+import pickle
+import seaborn as sns
+import plotly.express as px
 
 def perform_preprocessing():
     # Data Augmentation
@@ -15,7 +20,7 @@ def perform_preprocessing():
     )
 
     training_set = train_datagen.flow_from_directory(
-        'archive/Train',
+        'dataset/Train',
         target_size=(128, 128),  # Resize to 128x128 pixels (Compatibility to MobileNetV2)
         batch_size=64,
         class_mode='sparse',     # Sparse categorical labels, returns labels as integers
@@ -25,13 +30,32 @@ def perform_preprocessing():
     # Test Data Preprocessing
     test_datagen = ImageDataGenerator(rescale=1./255)
     test_set = test_datagen.flow_from_directory(
-        'archive/Test',
+        'dataset/Test',
         target_size=(128, 128),  # Match training size
         batch_size=64,
         class_mode='sparse',     # Sparse categorical labels
         color_mode='rgb'
     )
+    '''
+    # Load the test data and split it into validation and test sets
+    test_set = test_datagen.flow_from_directory(
+        'dataset/Test',
+        target_size=(128, 128),  # Match training size
+        batch_size=64,
+        class_mode='sparse',     # Sparse categorical labels
+        color_mode='rgb',
+        subset='training'        # This will use the first 50% for training (validation here)
+    )
 
+    val_set = test_datagen.flow_from_directory(
+        'dataset/Test',
+        target_size=(128, 128),  # Match training size
+        batch_size=64,
+        class_mode='sparse',     # Sparse categorical labels
+        color_mode='rgb',
+        subset='validation'      # This will use the second 50% for validation
+    )
+    '''
     # Display some augmented images
     x_batch, y_batch = next(training_set)  # Get a batch of training data
     plt.figure(figsize=(10, 10))
@@ -42,7 +66,35 @@ def perform_preprocessing():
         plt.axis('off')
     plt.show()
     
-    return train_datagen, training_set, test_set
+    class_indices = training_set.class_indices  # Get the class label-to-index mapping
+    with open('model/class_indices.pkl', 'wb') as f:
+        pickle.dump(class_indices, f)  # Save the mapping to a file
+        
+    reverse_class_indices = get_reverse_class_indices(training_set)  # Get the reverse mapping
+    
+    plot_class_distribution(reverse_class_indices, training_set)
+    
+    return training_set, test_set
+
+def get_reverse_class_indices(training_set):
+    return {v: k for k, v in training_set.class_indices.items()}
+
+def plot_class_distribution(reverse_class_indices, training_set):
+    # Create a count plot
+    class_names = [reverse_class_indices[label] for label in training_set.classes]
+    df = pd.DataFrame({'Class': class_names})
+    # Create the count plot
+    fig = px.histogram(df, x="Class", category_orders={"Class": sorted(reverse_class_indices.values())},
+                    title="Class Distribution in Training Data", labels={"Class": "Classes"})
+
+    # Customize axes labels and title
+    fig.update_layout(
+        xaxis_title="Classes",
+        yaxis_title="Number of Images",
+        xaxis_tickangle=90  # Rotate class names for better visibility
+    )
+
+    fig.show()
 
 # Extract data from the generator function
 def extract_data_from_generator(generator):

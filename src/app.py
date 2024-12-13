@@ -29,7 +29,7 @@ st.write("Upload an image and choose a model to predict the ASL character.")
 # Dropdown to select model
 model_choice = st.selectbox(
     "Select a model for prediction:",
-    ["CNN (MobileNetV2)", "Logistic Regression", "Decision Tree"]
+    ["CNN (MobileNetV2)"]
 )
 
 # Upload image

@@ -15,18 +15,18 @@ from modules.model_setup import setup_base_model, setup_model
 from modules.model_training import train_the_model
 from modules.model_tuning import tune_the_base_model, tune_the_model, perform_hyperparam_tuning
 from modules.prediction import perform_prediction, predict_outside_image
-from modules.plot_metrics import plot_the_metrics
+from modules.plot_metrics import plot_the_metrics, plot_the_metrics2
 
 def main():
     print('\n Step 1: Loading and Preprocess Data')
-    train_datagen, training_set, test_set = perform_preprocessing()
+    training_data, test_data = perform_preprocessing()
     
     print('\n Step 2: Load Pretrained Model (Feature Extractor)')
     base_model = setup_base_model()
     model = setup_model(base_model)
     
     print('\n Step 3: Hyper parameter tuning')
-    best_hps = perform_hyperparam_tuning(training_set)
+    best_hps = perform_hyperparam_tuning(training_data)
     print(best_hps)
 
     print('\n Step 4: Train the model')    
@@ -39,23 +39,26 @@ def main():
         loss='sparse_categorical_crossentropy',
         metrics=['accuracy']
     )
-    model_checkpoint = train_the_model(model, training_set, test_set)
+    
+    model_checkpoint = train_the_model(model, training_data, test_data)
     
     print('\n Step 5: Model Tuning')
     base_model = tune_the_base_model(base_model)
-    history_finetune = tune_the_model(model, training_set, test_set, model_checkpoint)
+    history_finetune = tune_the_model(model, training_data, test_data, model_checkpoint)
     
-    print('\n Step 6: Predict on Entire Test Dataset')
-    perform_prediction(model, training_set, test_set)
-    
-    print('\n Step 7: Plot metrics')
+    print('\n Step 6: Plot metrics')
     plot_the_metrics(history_finetune)
+    plot_the_metrics2(history_finetune)
+    
+    print('\n Step 7: Predict on Entire Test Dataset')
+    perform_prediction(model, training_data, test_data)
     
     print('\n Step 8: Save the model')
     model.save('model/asl_recognition_model.h5')
     
     print('\n Step 9: Sample predict outside image')
-    predict_outside_image('archive/Prediction/A.jpg', model, training_set.class_indices)
+    predict_outside_image('dataset/Prediction/A.jpg', model, training_data.class_indices)
+    
 
 if __name__ == "__main__":
     main()

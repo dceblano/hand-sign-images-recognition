@@ -41,13 +41,13 @@ def perform_hyperparam_tuning(training_set):
     tuner = kt.Hyperband(
         create_model,
         objective='val_accuracy',
-        max_epochs=2,
+        max_epochs=1,
         factor=3,
         directory='hyperband_dir',
         project_name='hyperband_tuning'
     )
     
-    tuner.search(x_train, y_train, epochs=2, validation_split=0.2)
+    tuner.search(x_train, y_train, epochs=1, validation_split=0.2)
     
     # Get the optimal hyperparameters
     best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
