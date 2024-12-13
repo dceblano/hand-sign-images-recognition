@@ -6,12 +6,12 @@ import pickle
 
 # Load models
 # cnn_model = load_model('../model/cnn_model.h5')
-cnn_model = load_model('../model/asl_recognition_model2.h5')
+cnn_model = load_model('asl_recognition_model2.h5')
 
 
 
-efficientnet_model = load_model('../model/efficientnet_model.h5')
-vgg16_model = load_model('../model/vgg16_model.h5')
+efficientnet_model = load_model('efficientnet_model.h5')
+vgg16_model = load_model('vgg16_model.h5')
 
 # with open('logistic_regression_model.pkl', 'rb') as f:
 #     logistic_model = pickle.load(f)
@@ -19,7 +19,7 @@ vgg16_model = load_model('../model/vgg16_model.h5')
 #     decision_tree_model = pickle.load(f)
 
 # Load class indices for CNN
-with open('../model/class_indices.pkl', 'rb') as f:
+with open('class_indices.pkl', 'rb') as f:
     class_indices = pickle.load(f)
 print("Class Indices Loaded:", class_indices)
 
