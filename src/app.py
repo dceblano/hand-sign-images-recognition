@@ -5,14 +5,14 @@ import numpy as np
 import pickle
 
 # Load models
-cnn_model = load_model('cnn_model.h5')
+cnn_model = load_model('model/cnn_model.h5')
 # with open('logistic_regression_model.pkl', 'rb') as f:
 #     logistic_model = pickle.load(f)
 # with open('decision_tree_model.pkl', 'rb') as f:
 #     decision_tree_model = pickle.load(f)
 
 # Load class indices for CNN
-with open('class_indices.pkl', 'rb') as f:
+with open('model/class_indices.pkl', 'rb') as f:
     class_indices = pickle.load(f)
 print("Class Indices Loaded:", class_indices)
 

@@ -1,5 +1,6 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
+import numpy as np
 
 def perform_preprocessing():
     # Data Augmentation
@@ -43,3 +44,14 @@ def perform_preprocessing():
     
     return train_datagen, training_set, test_set
 
+# Extract data from the generator function
+def extract_data_from_generator(generator):
+    x_data = []
+    y_data = []
+    
+    for i in range(len(generator)):
+        x_batch, y_batch = generator[i]
+        x_data.extend(x_batch)
+        y_data.extend(y_batch)
+    
+    return np.array(x_data), np.array(y_data)

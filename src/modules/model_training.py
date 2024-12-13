@@ -29,8 +29,8 @@ def train_the_model(model, training_set, test_set):
     history = model.fit(
         training_set,
         validation_data=test_set,
-        epochs=1,
-        # class_weight = class_weights,
+        epochs=2,
+        batch_size=16,
         callbacks=[reduce_lr, model_checkpoint]
     )
     
