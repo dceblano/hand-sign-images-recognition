@@ -10,7 +10,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from modules.model_setup import setup_base_model
 from modules.data_preprocessing import extract_data_from_generator
-
+from modules.other_models import save_history
 # Define a function to create the model
 def create_model(hp):
     base_model = setup_base_model()
@@ -41,13 +41,13 @@ def perform_hyperparam_tuning(training_set):
     tuner = kt.Hyperband(
         create_model,
         objective='val_accuracy',
-        max_epochs=1,
+        max_epochs=3,
         factor=3,
         directory='hyperband_dir',
         project_name='hyperband_tuning'
     )
     
-    tuner.search(x_train, y_train, epochs=1, validation_split=0.2)
+    tuner.search(x_train, y_train, epochs=3, validation_split=0.2)
     
     # Get the optimal hyperparameters
     best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
@@ -73,7 +73,9 @@ def tune_the_model(model, training_set, test_set, model_checkpoint):
     history_finetune = model.fit(
         training_set,
         validation_data=test_set,
-        epochs=1,  # Train for a few more epochs
+        epochs=3,  # Train for a few more epochs
         callbacks=[model_checkpoint]  # Apply early stopping
     )
+    # Save the history to a pickle file
+    save_history(history_finetune, 'MobileNetV2_finetune_history.pkl')   
     return history_finetune

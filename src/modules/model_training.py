@@ -31,7 +31,7 @@ def train_the_model(model, training_set, test_set):
     history = model.fit(
         training_set,
         validation_data=test_set,
-        epochs=1,
+        epochs=3,
         callbacks=[reduce_lr, model_checkpoint]
     )
     
