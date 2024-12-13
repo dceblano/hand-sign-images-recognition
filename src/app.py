@@ -6,12 +6,10 @@ import pickle
 
 # Load models
 # cnn_model = load_model('../model/cnn_model.h5')
-cnn_model = load_model('asl_recognition_model2.h5')
 
-
-
-efficientnet_model = load_model('efficientnet_model.h5')
-vgg16_model = load_model('vgg16_model.h5')
+# cnn_model = load_model('asl_recognition_model2.h5')
+# efficientnet_model = load_model('efficientnet_model.h5')
+# vgg16_model = load_model('vgg16_model.h5')
 
 # with open('logistic_regression_model.pkl', 'rb') as f:
 #     logistic_model = pickle.load(f)
@@ -85,11 +83,11 @@ if uploaded_file is not None:
 
     # Select the model for prediction
     if model_choice == "MobileNetV2":
-        model = cnn_model
+        model = load_model('asl_recognition_model2.h5')
     elif model_choice == "EfficientNet":
-        model = efficientnet_model
+        model = load_model('efficientnet_model.h5')
     elif model_choice == "VGG16":
-        model = vgg16_model
+        model = load_model('vgg16_model.h5')
 
     # Predict the label and top 5 probabilities
     predicted_label, top_5_predictions = predict_outside_image_streamlit(
