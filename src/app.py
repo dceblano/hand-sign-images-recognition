@@ -5,7 +5,11 @@ import numpy as np
 import pickle
 
 # Load models
-cnn_model = load_model('../model/cnn_model.h5')
+# cnn_model = load_model('../model/cnn_model.h5')
+cnn_model = load_model('../model/asl_recognition_model2.h5')
+
+
+
 efficientnet_model = load_model('../model/efficientnet_model.h5')
 vgg16_model = load_model('../model/vgg16_model.h5')
 
